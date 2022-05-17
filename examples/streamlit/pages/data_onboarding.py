@@ -20,22 +20,31 @@ def app():
 
     if button:
 
+        
         op = KiaraOperation(kiara=kiara, operation_name="import.file_bundle")
         inputs = {"path": path}
         job_id = op.queue_job(**inputs)
 
-        op.save_result(
+        try:
+             op.save_result(
             job_id=job_id, aliases={'file_bundle': 'text_corpus_bundle'}
         )
+        except Exception:
+            pass
 
+       
         op = KiaraOperation(kiara=kiara, operation_name="create.table.from.csv_file_bundle")
         inputs = {"csv_file_bundle": 'alias:text_corpus_bundle'}
         job_id = op.queue_job(**inputs)
 
-        op.save_result(
+        try:
+             op.save_result(
             job_id=job_id, aliases={"table": 'cronaca_sovversiva'}
         )
+        except Exception:
+            pass
 
+        
         result = []
         for alias, alias_item in kiara.alias_registry.aliases.items():
             value = kiara.data_registry.get_value(alias_item.value_id)
@@ -52,6 +61,8 @@ def app():
                 arrow_table = actual_table_obj.arrow_table
                 df = arrow_table.to_pandas()
                 st.dataframe(df)
+                if 'init_df' not in st.session_state:
+                    st.session_state['init_df'] = df
 
 
 
