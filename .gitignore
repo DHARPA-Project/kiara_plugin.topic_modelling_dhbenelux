@@ -65,4 +65,4 @@ ci/conda/**/build
 ci/conda/kiara_plugin.topic_modelling_dhbenelux/meta.yaml
 
 # Streamlit data
-
+examples/data/
