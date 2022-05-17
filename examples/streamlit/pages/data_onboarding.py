@@ -47,12 +47,11 @@ def app():
         else:
             for a in result:
                 st.write(a)
-                
-                
-                #table_value = kiara.data_registry.get_value("alias:cronaca_sovversiva")
-                #actual_table_obj = table_value.data
-                #arrow_table = actual_table_obj.arrow_table
-                #st.table(arrow_table)
+                table_value = kiara.data_registry.get_value('alias:cronaca_sovversiva')
+                actual_table_obj = table_value.data
+                arrow_table = actual_table_obj.arrow_table
+                df = arrow_table.to_pandas()
+                st.dataframe(df)
 
 
 
