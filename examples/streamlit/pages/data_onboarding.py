@@ -19,16 +19,17 @@ def app():
     button = st.button("Onboard")
 
     if button:
+
         op = KiaraOperation(kiara=kiara, operation_name="import.file_bundle")
         inputs = {"path": path}
         job_id = op.queue_job(**inputs)
 
         op.save_result(
-            job_id=job_id, aliases={"file_bundle": 'text_corpus_bundle'}
+            job_id=job_id, aliases={'file_bundle': 'text_corpus_bundle'}
         )
 
         op = KiaraOperation(kiara=kiara, operation_name="create.table.from.csv_file_bundle")
-        inputs = {"csv_file_bundle": 'alias:text_corpus_bundle.file_bundle'}
+        inputs = {"csv_file_bundle": 'alias:text_corpus_bundle'}
         job_id = op.queue_job(**inputs)
 
         op.save_result(
@@ -46,17 +47,12 @@ def app():
         else:
             for a in result:
                 st.write(a)
-
-
-
-
-
-
-
-
-
-
-
+                
+                
+                #table_value = kiara.data_registry.get_value("alias:cronaca_sovversiva")
+                #actual_table_obj = table_value.data
+                #arrow_table = actual_table_obj.arrow_table
+                #st.table(arrow_table)
 
 
 
