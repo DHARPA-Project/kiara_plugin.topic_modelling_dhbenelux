@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 import streamlit as st
-from kiara import Kiara
 
 # Custom imports
 from multipage import MultiPage

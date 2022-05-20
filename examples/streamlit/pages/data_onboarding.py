@@ -10,59 +10,61 @@ def app():
     if 'kiara' not in st.session_state:
         st.session_state['kiara'] = kiara
 
-    st.markdown("Download the corpus on your computer, unzip and copy local folder path to 1 publication")
-    st.markdown("https://zenodo.org/record/4596345/files/ChroniclItaly_3.0_original.zip?download")
     st.markdown("Paste local folder path into input below") 
-    st.markdown("Wait for the success message, and then select next page in top left nav menu")
 
     path = st.text_input('Path to files folder')
+    data_alias = st.text_input('alias')
     button = st.button("Onboard")
 
-    if button:
+    if button and data_alias:
 
-        
+        print(data_alias)
+
+        st.session_state['data_alias'] = data_alias
         op = KiaraOperation(kiara=kiara, operation_name="import.file_bundle")
         inputs = {"path": path}
         job_id = op.queue_job(**inputs)
 
         try:
-             op.save_result(
-            job_id=job_id, aliases={'file_bundle': 'text_corpus_bundle'}
+            op.save_result(
+            job_id=job_id, aliases={'file_bundle': 'text_file_bundle'}
         )
         except Exception:
             pass
 
        
-        op = KiaraOperation(kiara=kiara, operation_name="create.table.from.csv_file_bundle")
-        inputs = {"csv_file_bundle": 'alias:text_corpus_bundle'}
+        op = KiaraOperation(kiara=kiara, operation_name="create.table.from.text_file_bundle")
+        inputs = {"text_file_bundle": 'alias:text_file_bundle'}
         job_id = op.queue_job(**inputs)
 
         try:
-             op.save_result(
-            job_id=job_id, aliases={"table": 'cronaca_sovversiva'}
+            op.save_result(
+            job_id=job_id, aliases={"table": data_alias}
         )
         except Exception:
             pass
 
         
-        result = []
-        for alias, alias_item in kiara.alias_registry.aliases.items():
-            value = kiara.data_registry.get_value(alias_item.value_id)
-            if value.data_type_name == "table":
-                result.append(alias)
+        # result = []
+        # for alias, alias_item in kiara.alias_registry.aliases.items():
+        #     value = kiara.data_registry.get_value(alias_item.value_id)
+        #     if value.data_type_name == "table":
+        #         result.append(alias)
 
-        if not result:
-            st.sidebar.write(" -- no tables --")
+        table_value = kiara.data_registry.get_value(f'alias:{data_alias}')
+
+        if not table_value:
+            st.write('Table not found')
+        
         else:
-            for a in result:
-                st.write(a)
-                table_value = kiara.data_registry.get_value('alias:cronaca_sovversiva')
-                actual_table_obj = table_value.data
-                arrow_table = actual_table_obj.arrow_table
-                df = arrow_table.to_pandas()
-                st.dataframe(df)
-                if 'init_df' not in st.session_state:
-                    st.session_state['init_df'] = df
+            actual_table_obj = table_value.data
+            arrow_table = actual_table_obj.arrow_table
+            df = arrow_table.to_pandas()
+            st.dataframe(df)
+            if 'init_df' not in st.session_state:
+                st.session_state['init_df'] = df
+
+                
 
 
 
