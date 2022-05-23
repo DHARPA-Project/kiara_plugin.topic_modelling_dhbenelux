@@ -10,6 +10,7 @@ def app():
     if 'kiara' not in st.session_state:
         st.session_state['kiara'] = kiara
 
+    st.write("##### 1. Data Onboarding")
     st.markdown("Paste local folder path into input below") 
 
     path = st.text_input('Path to files folder')
@@ -18,7 +19,7 @@ def app():
 
     if button and data_alias:
 
-        print(data_alias)
+        #print(data_alias)
 
         st.session_state['data_alias'] = data_alias
         op = KiaraOperation(kiara=kiara, operation_name="import.file_bundle")
@@ -65,8 +66,4 @@ def app():
                 st.session_state['init_df'] = df
 
                 
-
-
-
-
 
