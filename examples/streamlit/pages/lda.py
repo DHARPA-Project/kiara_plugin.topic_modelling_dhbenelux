@@ -19,7 +19,7 @@ def app():
     button = st.button("Generate topics")
     if button:
 
-        print(compute_coherence)
+        # print(compute_coherence)
         
         table_value = kiara.data_registry.get_value('alias:tokens_array')
         
@@ -38,12 +38,12 @@ def app():
         )
         except Exception:
             pass
-
     
-
-    # topic_models = kiara.data_registry.get_value('alias:topic_models')
-    # coherence_table = kiara.data_registry.get_value('alias:coherence_table')
-    # coherence_map = kiara.data_registry.get_value('alias:coherence_map')
+    
+    topic_models_value = kiara.data_registry.get_value('alias:topic_models')
+    topic_models = topic_models_value.data.dict_data
+    coherence_table = kiara.data_registry.get_value('alias:coherence_table')
+    coherence_map = kiara.data_registry.get_value('alias:coherence_map')
 
     # st.write("### Coherence score")
     # if not compute_coherence:
