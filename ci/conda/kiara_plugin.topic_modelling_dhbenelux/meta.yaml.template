@@ -24,7 +24,10 @@ requirements:
   run:
     - python
     - kiara>=0.4.4
-    - kiara_plugin.core_types>=0.4.2
+    - kiara_plugin.core_types>=0.4.7
+    - kiara_plugin.tabular>=0.4.6
+    - kiara_plugin.language_processing>=0.4.3
+    - streamlit>=1.9.0
 about:
   home: https://github.com/DHARPA-Project/kiara_plugin.topic_modelling_dhbenelux
   license: "Mozilla Public 2.0 (MPL 2.0)"

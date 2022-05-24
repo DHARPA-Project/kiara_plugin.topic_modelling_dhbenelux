@@ -10,7 +10,7 @@ conda create -n topic_modelling_dhbenelux python=3.9
 conda activate topic_modelling_dhbenelux
 conda install -c conda-forge mamba   # this is optional, but makes everything install related much faster, if you don't use it, replace 'mamba' with 'conda' below
 mamba install -c conda-forge -c dharpa kiara
-mamba install -c conda-forge -c dharpa kiara_plugin.core_types kiara_plugin.tabular   # optional, adjust which plugin packages you depend on, those two are quite common
+mamba install -c conda-forge -c dharpa kiara_plugin.core_types kiara_plugin.tabular kiara_plugin.language_processing streamlit
 ```
 
 ### Using Python venv
