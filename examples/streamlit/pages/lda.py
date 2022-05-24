@@ -15,6 +15,13 @@ def app():
     else:
         number_of_topics_min = st.number_input('Min number of topics', min_value = 1, value=4)
         number_of_topics_max = st.number_input('Max number of topics', min_value=1, value=7)
+    
+        save = st.checkbox("Save coherence table")
+
+        if save:
+            alias = st.text_input("Alias")
+    
+
 
     button = st.button("Generate topics")
     if button:
@@ -34,7 +41,7 @@ def app():
 
         try:
              op.save_result(
-            job_id=job_id, aliases={'topic_models': 'topic_models', 'coherence_table': 'coherence_table', 'coherence_map': 'coherence_map'}
+            job_id=job_id, aliases={'topic_models': 'topic_models', 'coherence_table': alias or None, 'coherence_map': 'coherence_map'}
         )
         except Exception:
             pass
@@ -68,16 +75,8 @@ def app():
 
 
                 st.table(df_coherence)
-                save = st.checkbox("Save coherence table")
-                if save:
-                    alias = st.text_input("Alias")
-                    save_btn = st.button("Save")
-                    if save_btn:
-                        if not alias:
-                            st.info("Not saving table, no alias provided.")
-                        else:
-                            saved = coherence_table.save(aliases=[alias])
-                            st.info(f"Coherence table saved with alias '{alias}', value id: {saved.id}")
+                
+                
 
             else:
                 st.write("No coherence computed (yet).")
