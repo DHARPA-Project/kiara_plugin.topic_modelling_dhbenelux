@@ -53,12 +53,4 @@ pre-commit install --hook-type commit-msg
 In addition to some Python-specific checks and cleanup tasks, this will also check your commit message so it's in line with the suggested format:
 https://www.conventionalcommits.org/en/v1.0.0/
 
-## Run kiara
 
-To check if everything works as expected and you can start adding/changing code in this repository, run any `kiara` command:
-
-```
-kiara operation list -t topic_modelling_dhbenelux
-```
-
-If everything is set up correctly, the output of this command should contain a few operations that are implemented in this repository.
