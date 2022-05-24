@@ -40,61 +40,61 @@ def app():
             pass
     
     
-    topic_models_value = kiara.data_registry.get_value('alias:topic_models')
-    topic_models = topic_models_value.data.dict_data
-    coherence_table = kiara.data_registry.get_value('alias:coherence_table')
-    coherence_map = kiara.data_registry.get_value('alias:coherence_map')
+        topic_models_value = kiara.data_registry.get_value('alias:topic_models')
+        topic_models = topic_models_value.data.dict_data
+        coherence_table = kiara.data_registry.get_value('alias:coherence_table')
+        coherence_map = kiara.data_registry.get_value('alias:coherence_map')
 
-    st.write("### Coherence score")
-    if compute_coherence is False:
-        st.write("Coherence not considered.")
-    else:
-        if coherence_map is not None:
-            #print(coherence_map)
-            c_map = coherence_map.data.dict_data
-            
-            df_coherence = pd.DataFrame(c_map.keys(), columns=['Number of topics'])
-            df_coherence['Coherence'] = c_map.values()
-
-
-            st.vega_lite_chart(df_coherence, {
-                "mark": {"type": "line", "point": True, "tooltip": True},
-                "encoding": {
-                    "x": {"field": "Number of topics", "type": "quantitative", "axis": {"format": ".0f", "tickCount": len(df_coherence)-1}},
-                    "y": {"field": "Coherence", "type": "quantitative", "format": ".3f"}
-                }
+        st.write("### Coherence score")
+        if compute_coherence is False:
+            st.write("Coherence not considered.")
+        else:
+            if coherence_map is not None:
+                #print(coherence_map)
+                c_map = coherence_map.data.dict_data
                 
-            }, use_container_width=True)
+                df_coherence = pd.DataFrame(c_map.keys(), columns=['Number of topics'])
+                df_coherence['Coherence'] = c_map.values()
 
 
-            st.table(df_coherence)
-            save = st.checkbox("Save coherence table")
-            if save:
-                alias = st.text_input("Alias")
-                save_btn = st.button("Save")
-                if save_btn:
-                    if not alias:
-                        st.info("Not saving table, no alias provided.")
-                    else:
-                        saved = coherence_table.save(aliases=[alias])
-                        st.info(f"Coherence table saved with alias '{alias}', value id: {saved.id}")
+                st.vega_lite_chart(df_coherence, {
+                    "mark": {"type": "line", "point": True, "tooltip": True},
+                    "encoding": {
+                        "x": {"field": "Number of topics", "type": "quantitative", "axis": {"format": ".0f", "tickCount": len(df_coherence)-1}},
+                        "y": {"field": "Coherence", "type": "quantitative", "format": ".3f"}
+                    }
+                    
+                }, use_container_width=True)
 
+
+                st.table(df_coherence)
+                save = st.checkbox("Save coherence table")
+                if save:
+                    alias = st.text_input("Alias")
+                    save_btn = st.button("Save")
+                    if save_btn:
+                        if not alias:
+                            st.info("Not saving table, no alias provided.")
+                        else:
+                            saved = coherence_table.save(aliases=[alias])
+                            st.info(f"Coherence table saved with alias '{alias}', value id: {saved.id}")
+
+            else:
+                st.write("No coherence computed (yet).")
+
+        st.write("### Model details")
+        if topic_models is None:
+            st.write("No models available (yet).")
         else:
-            st.write("No coherence computed (yet).")
+            all_topic_models = topic_models
+            
+            if not compute_coherence:
+                selected_model_idx = number_of_topics_min
+            else:
+                selected_model_idx = st.selectbox("Number of topics", options=range(number_of_topics_min, number_of_topics_max+1))
 
-    st.write("### Model details")
-    if topic_models is None:
-        st.write("No models available (yet).")
-    else:
-        all_topic_models = topic_models
-        
-        if not compute_coherence:
-            selected_model_idx = number_of_topics_min
-        else:
-            selected_model_idx = st.selectbox("Number of topics", options=range(number_of_topics_min, number_of_topics_max+1))
-
-        try:
-            selected_model_table = all_topic_models[str(selected_model_idx)]
-            st.table(pd.DataFrame(selected_model_table, columns=['id','model']))
-        except KeyError:
-            st.write(f"No model for {selected_model_idx} number of topics.")
+            try:
+                selected_model_table = all_topic_models[str(selected_model_idx)]
+                st.table(pd.DataFrame(selected_model_table, columns=['id','model']))
+            except KeyError:
+                st.write(f"No model for {selected_model_idx} number of topics.")
